@@ -286,6 +286,7 @@ void C_SyvSeDllConfigurationDialog::m_CancelClicked(void) const
 void C_SyvSeDllConfigurationDialog::m_ConfigureDllClicked(void) const
 {
    // check path for invalid signs for custom DLL
+#ifdef WIN32
    if (this->m_CheckCustomDllPath() == true)
    {
       const QString c_Path = this->m_GetAbsoluteDllPath();
@@ -319,6 +320,12 @@ void C_SyvSeDllConfigurationDialog::m_ConfigureDllClicked(void) const
          c_MessageBox.Execute();
       }
    }
+#else
+   C_OgeWiCustomMessage c_MessageBox(this->parentWidget(), C_OgeWiCustomMessage::E_Type::eWARNING);
+   c_MessageBox.SetHeading(C_GtGetText::h_GetText("PC CAN Interface configuration"));
+   c_MessageBox.SetDescription(C_GtGetText::h_GetText("CAN Interface configuration not implemented."));
+   c_MessageBox.Execute();
+#endif   
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -336,7 +343,12 @@ void C_SyvSeDllConfigurationDialog::m_TestConnectionClicked(void) const
       if (QFile::exists(c_Path) == true)
       {
          C_CAN c_Can;
+#ifdef WIN32
          sint32 s32_Return = c_Can.DLL_Open(c_Path.toStdString().c_str());
+#else
+         sint32 s32_Return = C_NO_ERR;
+#endif
+
          if (s32_Return == C_NO_ERR)
          {
             // Test the CAN
@@ -366,7 +378,9 @@ void C_SyvSeDllConfigurationDialog::m_TestConnectionClicked(void) const
          {
             c_Description = C_GtGetText::h_GetText("CAN DLL initialization not successful: could not open DLL.");
          }
+#ifdef WIN32
          (void)c_Can.DLL_Close();
+#endif
       }
       else
       {

@@ -34,3 +34,32 @@ Open Interface
 
 Safety ready
 -	Realize applications that need to address functional safety requirements. All safety related openSYDE components are certified by TÜV.
+
+
+## Building for Linux platforms
+
+Target platform for the openSYDE tools is Windows. 
+
+This branch adds basic support for Linux platforms. Currently the opensyde_tool can be built for Windows and Linux.
+
+*Linux platform support is pretty experimental and untested...*
+
+### Building the openSYDE tool
+
+* cd <repo>/opensyde_tool/pjt
+* mkdir build
+* cd  build
+* qmake ../openSYDE.pro
+* make -j8
+
+
+### Drawbacks on Linux platforms
+
+* Online help via key F1 is not supported
+* Opening an IDE from the tool is not supported
+* Code generation is not supported
+* Configuring as CAN interface (e.g. Interface number, Bitrate) from the tool is not supported. 
+  Interface "can0" is used. It is assumed to be up and configured to the correct bitrate.
+* Selecting a specific Ethernet interface via config file is not supported. All interfaces of the host are used.
+* Detection if running on a Laptop is not supported.
+* WinTaskbarProgress is not supported.

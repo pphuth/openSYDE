@@ -11,7 +11,6 @@
 #include "precomp_headers.h"
 
 #include <cmath>
-#include <windows.h>
 
 #include <QGraphicsView>
 
@@ -525,9 +524,10 @@ bool C_GiSvPc::m_OpenCANDllDialog(void) const
 //----------------------------------------------------------------------------------------------------------------------
 bool C_GiSvPc::mh_GetIsLaptop(void)
 {
+   bool q_Return = false;
+#ifdef WIN32
    SYSTEM_POWER_STATUS t_PowerStatus;
    const sintn sn_Success = GetSystemPowerStatus(&t_PowerStatus);
-   bool q_Return = false;
 
    if (sn_Success > 0)
    {
@@ -537,6 +537,9 @@ bool C_GiSvPc::mh_GetIsLaptop(void)
          q_Return = true;
       }
    }
+#else
+#warning mh_GetIsLaptop() is not implemented for linux targets yet
+#endif
 
    return q_Return;
 }

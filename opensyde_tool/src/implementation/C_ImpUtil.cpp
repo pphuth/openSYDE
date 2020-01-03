@@ -12,8 +12,10 @@
 /* -- Includes ------------------------------------------------------------------------------------------------------ */
 #include "precomp_headers.h"
 
+#ifdef WIN32
 #include <windows.h> //tlhelp32 does not do this by itself ...
 #include <tlhelp32.h>
+#endif
 #include <QDir>
 #include <QProcess>
 #include <QTextStream>
@@ -498,6 +500,7 @@ sint32 C_ImpUtil::h_OpenIDE(const QString & orc_IdeExeCall)
 
    if (orc_IdeExeCall.compare("") != 0)
    {
+#ifdef WIN32
       std::vector<HWND> c_Windows;
       QString c_ExeOnly;
       QStringList c_HelpList;
@@ -572,6 +575,11 @@ sint32 C_ImpUtil::h_OpenIDE(const QString & orc_IdeExeCall)
                                    " \"%1\" is missing.").arg(orc_IdeExeCall).toStdString().c_str());
          }
       }
+#else
+#warning OpenIDE feature not implemented yet.
+      s32_Retval = C_CONFIG;
+      osc_write_log_error("Open IDE", "openIDE not implemented yet.");
+#endif
    }
    else
    {
@@ -846,6 +854,7 @@ QStringList C_ImpUtil::h_AskUserToSaveRelativePath(QWidget * const opc_Parent, c
    \param[in,out]  orc_Windows   All found windows
 */
 //----------------------------------------------------------------------------------------------------------------------
+#ifdef WIN32
 void C_ImpUtil::mh_GetExistingApplicationHandle(const std::wstring & orc_ExeName, std::vector<HWND> & orc_Windows)
 {
    PROCESSENTRY32 c_Entry;
@@ -890,6 +899,7 @@ void C_ImpUtil::mh_GetExistingApplicationHandle(const std::wstring & orc_ExeName
       orc_Windows.push_back(c_Data.pc_WindowHandle);
    }
 }
+#endif
 
 //----------------------------------------------------------------------------------------------------------------------
 /*! \brief   Help function to get window from process ID
@@ -903,6 +913,7 @@ void C_ImpUtil::mh_GetExistingApplicationHandle(const std::wstring & orc_ExeName
    TRUE, FALSE
 */
 //----------------------------------------------------------------------------------------------------------------------
+#ifdef WIN32
 WINBOOL CALLBACK C_ImpUtil::mh_EnumWindowsCallback(HWND opc_Handle, const LPARAM os32_LParam)
 {
    T_HandleData & rc_Data = *reinterpret_cast<T_HandleData *>(os32_LParam);
@@ -925,6 +936,7 @@ WINBOOL CALLBACK C_ImpUtil::mh_EnumWindowsCallback(HWND opc_Handle, const LPARAM
    rc_Data.pc_WindowHandle = opc_Handle;
    return FALSE;
 }
+#endif
 
 //----------------------------------------------------------------------------------------------------------------------
 /*! \brief   Call external code generation tool.
