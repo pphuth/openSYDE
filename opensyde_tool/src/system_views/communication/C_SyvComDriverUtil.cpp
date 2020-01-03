@@ -17,6 +17,11 @@
 #include "C_Uti.h"
 #include "C_SyvComDriverUtil.h"
 #include "C_PuiSdHandler.h"
+#ifdef WIN32
+#include "C_OSCIpDispatcherWinSock.h"
+#else
+#include "C_OSCIpDispatcherLinuxSock.h"
+#endif
 
 /* -- Used Namespaces ----------------------------------------------------------------------------------------------- */
 using namespace stw_types;
@@ -58,7 +63,7 @@ using namespace stw_opensyde_core;
 sint32 C_SyvComDriverUtil::h_GetOSCComDriverParamFromView(const uint32 ou32_ViewIndex, uint32 & oru32_ActiveBusIndex,
                                                           std::vector<uint8> & orc_ActiveNodes,
                                                           stw_can::C_CAN ** const oppc_CanDispatcher,
-                                                          C_OSCIpDispatcherWinSock ** const oppc_IpDispatcher,
+                                                          C_OSCIpDispatcher ** const oppc_IpDispatcher,
                                                           const bool oq_InitCan)
 {
    bool q_NameInvalid;
@@ -132,9 +137,13 @@ sint32 C_SyvComDriverUtil::h_GetOSCComDriverParamFromView(const uint32 ou32_View
                   "User/eth_config.ini");
 
                *oppc_CanDispatcher = NULL;
+#ifdef WIN32
                *oppc_IpDispatcher = new C_OSCIpDispatcherWinSock();
 
                (*oppc_IpDispatcher)->LoadConfigFile(c_EthFilePath.toStdString().c_str());
+#else
+               *oppc_IpDispatcher = new C_OSCIpDispatcherLinuxSock();
+#endif
             }
          }
          else
