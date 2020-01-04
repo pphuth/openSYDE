@@ -271,6 +271,7 @@ C_SCLString TGL_PACKAGE stw_tgl::TGL_ExtractFileExtension(const C_SCLString & or
    Extract a file extension separated from the file name by a ".".
    If there is more than one "." in the file path the last one will be used.
    Then replace it with the new one.
+   If there is no ".", add the new extension to the end of the string.
 
    \param[in]     orc_Path       full file path (or just name with extension)
    \param[in]     orc_Extension  new extension (must be specified with the ".")
@@ -291,6 +292,11 @@ C_SCLString TGL_PACKAGE stw_tgl::TGL_ChangeFileExtension(const C_SCLString & orc
       c_NewPath = c_NewPath.Delete(u32_Pos, INT_MAX); //remove everything from and including the "."
       c_NewPath += orc_Extension;
    }
+   else
+   {
+      c_NewPath += orc_Extension;
+   }
+
    return c_NewPath;
 }
 
