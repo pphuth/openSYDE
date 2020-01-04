@@ -40,9 +40,14 @@ Safety ready
 
 Target platform for the openSYDE tools is Windows. 
 
-This branch adds basic support for Linux platforms. Currently the opensyde_tool can be built for Windows and Linux.
+This branch adds basic support for Linux platforms. Currently the opensyde_tool and the opensyde_syde_coder_c 
+can be built for Windows and Linux.
 
-*Linux platform support is pretty experimental and untested...*
+**Linux platform support is pretty experimental and untested...**
+
+### Preparations (on Ubuntu 18.04)
+
+* sudo apt-get install git make g++ qt5-default libqt5charts5-dev libqt5svg5-dev libzip-dev
 
 ### Building the openSYDE tool
 
@@ -53,12 +58,20 @@ This branch adds basic support for Linux platforms. Currently the opensyde_tool 
 * make -j8
 
 
+### Building the openSYDE C coder
+
+* cd <repo>/opensyde_syde_coder_c/pjt
+* mkdir build
+* cd  build
+* qmake ../osy_syde_coder_c.pro.pro
+* make -j8
+
+
 ### Drawbacks on Linux platforms
 
 * Online help via key F1 is not supported
 * Opening an IDE from the tool is not supported
-* Code generation is not supported
-* Configuring as CAN interface (e.g. Interface number, Bitrate) from the tool is not supported. 
+* Configuring as CAN interface (e.g. Interface number, Bitrate) from the tool is not supported.
   Interface "can0" is used. It is assumed to be up and configured to the correct bitrate.
 * Selecting a specific Ethernet interface via config file is not supported. All interfaces of the host are used.
 * Detection if running on a Laptop is not supported.

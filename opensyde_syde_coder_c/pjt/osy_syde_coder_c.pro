@@ -7,17 +7,17 @@ QT -= gui
 QT -= core
 
 #add windows API libraries
-LIBS += -lversion
+win32:LIBS += -lversion
 
-#link all libraries statically
-QMAKE_LFLAGS += -static-libstdc++
-QMAKE_LFLAGS += -static-libgcc
-QMAKE_LFLAGS += -static
+#link all libraries statically (Windows only)
+win32:QMAKE_LFLAGS += -static-libstdc++ \
+                      -static-libgcc \
+                      -static
 
 #version info:
 RC_FILE = ../src/resources.rc
 
-DESTDIR = ../result
+DESTDIR = $$_PRO_FILE_PWD_/../result
 
 SOURCES += \
     ../libs/osy_core/scl/CSCLChecksums.cpp \
@@ -70,10 +70,6 @@ SOURCES += \
     ../libs/osy_core/C_OSCChecksummedIniFile.cpp \
     ../src/C_CExport.cpp \
     ../src/osy_code_exporter/C_OsyCodeExportBase.cpp \
-    ../libs/osy_core/kefex_diaglib/tgl_windows/TGLFile.cpp \
-    ../libs/osy_core/kefex_diaglib/tgl_windows/TGLTasks.cpp \
-    ../libs/osy_core/kefex_diaglib/tgl_windows/TGLTime.cpp \
-    ../libs/osy_core/kefex_diaglib/tgl_windows/TGLUtils.cpp \
     ../libs/osy_core/project/system/FileLoadersV2/C_OSCNodeDataPoolFilerV2.cpp \
     ../libs/osy_core/project/system/FileLoadersV2/C_OSCNodeFilerV2.cpp \
     ../libs/osy_core/project/system/FileLoadersV2/C_OSCSystemBusFilerV2.cpp \
@@ -85,6 +81,17 @@ SOURCES += \
     ../libs/osy_core/project/system/C_OSCTargetSupportPackageFiler.cpp \
     ../libs/osy_core/project/system/node/C_OSCNodeDataPoolContentUtil.cpp
 
+win32:SOURCES  += \
+    ../libs/osy_core/kefex_diaglib/tgl_windows/TGLFile.cpp \
+    ../libs/osy_core/kefex_diaglib/tgl_windows/TGLTasks.cpp \
+    ../libs/osy_core/kefex_diaglib/tgl_windows/TGLTime.cpp \
+    ../libs/osy_core/kefex_diaglib/tgl_windows/TGLUtils.cpp
+
+unix:SOURCES  += \
+    ../libs/osy_core/kefex_diaglib/tgl_linux/TGLFile.cpp \
+    ../libs/osy_core/kefex_diaglib/tgl_linux/TGLTasks.cpp \
+    ../libs/osy_core/kefex_diaglib/tgl_linux/TGLTime.cpp \
+    ../libs/osy_core/kefex_diaglib/tgl_linux/TGLUtils.cpp
 
 
 PRECOMPILED_HEADER = ../src/precomp_headers.h
@@ -99,10 +106,6 @@ HEADERS += \
     ../libs/osy_core/scl/CSCLStringList.h \
     ../libs/osy_core/scl/SCLDynamicArray.h \
     ../libs/osy_core/stwtypes/stwtypes.h \
-    ../libs/osy_core/tgl_windows/TGLFile.h \
-    ../libs/osy_core/tgl_windows/TGLTasks.h \
-    ../libs/osy_core/tgl_windows/TGLTime.h \
-    ../libs/osy_core/tgl_windows/TGLUtils.h \
     ../libs/osy_core/xml_parser/tinyxml2/tinyxml2.h \
     ../libs/osy_core/xml_parser/C_OSCChecksummedXML.h \
     ../libs/osy_core/xml_parser/C_OSCXMLParser.h \
@@ -150,10 +153,6 @@ HEADERS += \
     ../libs/osy_core/C_OSCChecksummedIniFile.h \
     ../src/osy_code_exporter/C_OsyCodeExportBase.h \
     ../src/resources.rc \
-    ../libs/osy_core/kefex_diaglib/tgl_windows/TGLFile.h \
-    ../libs/osy_core/kefex_diaglib/tgl_windows/TGLTasks.h \
-    ../libs/osy_core/kefex_diaglib/tgl_windows/TGLTime.h \
-    ../libs/osy_core/kefex_diaglib/tgl_windows/TGLUtils.h \
     ../libs/osy_core/project/system/FileLoadersV2/C_OSCNodeDataPoolFilerV2.h \
     ../libs/osy_core/project/system/FileLoadersV2/C_OSCNodeFilerV2.h \
     ../libs/osy_core/project/system/FileLoadersV2/C_OSCSystemBusFilerV2.h \
@@ -165,6 +164,19 @@ HEADERS += \
     ../libs/osy_core/project/system/C_OSCTargetSupportPackageFiler.h \
     ../src/C_OSCExportCommunicationStackV2.h \
     ../libs/osy_core/project/system/node/C_OSCNodeDataPoolContentUtil.h
+
+win32:HEADERS  += \
+    ../libs/osy_core/kefex_diaglib/tgl_windows/TGLFile.h \
+    ../libs/osy_core/kefex_diaglib/tgl_windows/TGLTasks.h \
+    ../libs/osy_core/kefex_diaglib/tgl_windows/TGLTime.h \
+    ../libs/osy_core/kefex_diaglib/tgl_windows/TGLUtils.h
+
+unix:HEADERS  += \
+    ../libs/osy_core/kefex_diaglib/tgl_linux/TGLFile.h \
+    ../libs/osy_core/kefex_diaglib/tgl_linux/TGLTasks.h \
+    ../libs/osy_core/kefex_diaglib/tgl_linux/TGLTime.h \
+    ../libs/osy_core/kefex_diaglib/tgl_linux/TGLUtils.h
+
 
 #regular (non-library) header paths (also lists the system ones so QtCreator parser sees them)
 INCLUDEPATH += ../src \
@@ -182,7 +194,12 @@ INCLUDEPATH += ../src \
                ../libs/osy_core/scl \
                ../libs/osy_core/stwtypes\
                ../libs/osy_core/kefex_diaglib \
-               ../libs/osy_core/kefex_diaglib/tgl_windows \
                ../libs/osy_core/protocol_drivers \
                ../libs/osy_core/xml_parser \
                ../libs/osy_core/xml_parser/tinyxml2
+
+win32:INCLUDEPATH  += \
+               ../libs/osy_core/kefex_diaglib/tgl_windows
+
+unix:INCLUDEPATH  += \
+               ../libs/osy_core/kefex_diaglib/tgl_linux
