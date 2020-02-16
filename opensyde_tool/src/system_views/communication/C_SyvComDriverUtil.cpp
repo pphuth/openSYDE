@@ -98,6 +98,7 @@ sint32 C_SyvComDriverUtil::h_GetOSCComDriverParamFromView(const uint32 ou32_View
 
             if (pc_Bus->e_Type == C_OSCSystemBus::eCAN)
             {
+#ifdef WIN32
                QFile c_File;
                QString c_FilePath;
                //No ethernet
@@ -111,11 +112,7 @@ sint32 C_SyvComDriverUtil::h_GetOSCComDriverParamFromView(const uint32 ou32_View
                {
                   *oppc_CanDispatcher = new stw_can::C_CAN();
 
-#ifdef WIN32
                   s32_Retval = (*oppc_CanDispatcher)->DLL_Open(c_FilePath.toStdString().c_str());
-#else
-                  s32_Retval = C_NO_ERR;
-#endif
                   if ((s32_Retval == C_NO_ERR) &&
                       (oq_InitCan == true))
                   {
@@ -131,6 +128,18 @@ sint32 C_SyvComDriverUtil::h_GetOSCComDriverParamFromView(const uint32 ou32_View
                {
                   s32_Retval = C_RD_WR;
                }
+#else
+               QString c_InterfaceName;
+
+               c_InterfaceName = pc_View->GetPcData().GetCustomCANDllPath();
+               *oppc_CanDispatcher = new stw_can::C_CAN();
+               s32_Retval = (*oppc_CanDispatcher)->CAN_Init(c_InterfaceName.toStdString().c_str());
+
+               if (s32_Retval != C_NO_ERR)
+               {
+                  s32_Retval = C_COM;
+               }
+#endif
             }
             else
             {

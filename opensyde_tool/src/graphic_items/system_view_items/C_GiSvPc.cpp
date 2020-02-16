@@ -22,7 +22,11 @@
 #include "C_OgePopUpDialog.h"
 #include "C_GiCustomFunctions.h"
 #include "C_OgeWiCustomMessage.h"
+#ifdef WIN32
 #include "C_SyvSeDllConfigurationDialog.h"
+#else
+#include "C_SyvSeCanConfigurationDialog.h"
+#endif
 #include "C_OSCSystemBus.h"
 
 /* -- Used Namespaces ----------------------------------------------------------------------------------------------- */
@@ -478,11 +482,15 @@ bool C_GiSvPc::m_OpenCANDllDialog(void) const
       C_PuiSvPc c_PcData = pc_View->GetPcData();
       QGraphicsView * const pc_GraphicsView = this->scene()->views().at(0);
       QPointer<C_OgePopUpDialog> const c_DllDialog = new C_OgePopUpDialog(pc_GraphicsView, pc_GraphicsView);
-      C_SyvSeDllConfigurationDialog * const pc_DllWidget = new C_SyvSeDllConfigurationDialog(*c_DllDialog);
+#ifdef WIN32
+      C_SyvSeDllConfigurationDialog * const pc_Widget = new C_SyvSeDllConfigurationDialog(*c_DllDialog);
+#else
+      C_SyvSeCanConfigurationDialog * const pc_Widget = new C_SyvSeCanConfigurationDialog(*c_DllDialog);
+#endif
 
       // Initialize the data
-      pc_DllWidget->SetDllType(c_PcData.GetCANDllType());
-      pc_DllWidget->SetCustomDllPath(c_PcData.GetCustomCANDllPath());
+      pc_Widget->SetDllType(c_PcData.GetCANDllType());
+      pc_Widget->SetCustomDllPath(c_PcData.GetCustomCANDllPath());
       // Bitrate
       if (c_PcData.GetConnected() == true)
       {
@@ -490,7 +498,7 @@ bool C_GiSvPc::m_OpenCANDllDialog(void) const
 
          if (pc_Bus != NULL)
          {
-            pc_DllWidget->SetBitrate(pc_Bus->u64_BitRate);
+            pc_Widget->SetBitrate(pc_Bus->u64_BitRate);
          }
       }
 
@@ -501,7 +509,7 @@ bool C_GiSvPc::m_OpenCANDllDialog(void) const
       {
          // Update the data
          C_PuiSvHandler::h_GetInstance()->SetViewPCCANDll(this->mu32_ViewIndex,
-                                                          pc_DllWidget->GetDllType(), pc_DllWidget->GetCustomDllPath());
+                                                          pc_Widget->GetDllType(), pc_Widget->GetCustomDllPath());
          q_Retval = true;
       }
 
@@ -509,7 +517,7 @@ bool C_GiSvPc::m_OpenCANDllDialog(void) const
       {
          c_DllDialog->HideOverlay();
       }
-      //lint -e{429}  no memory leak because of the parent of pc_DllWidget and the Qt memory management
+      //lint -e{429}  no memory leak because of the parent of pc_Widget and the Qt memory management
    }
    return q_Retval;
 }

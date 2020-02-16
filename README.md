@@ -71,8 +71,7 @@ can be built for Windows and Linux.
 
 * Online help via key F1 is not supported
 * Opening an IDE from the tool is not supported
-* Configuring as CAN interface (e.g. Interface number, Bitrate) from the tool is not supported.
-  Interface "can0" is used. It is assumed to be up and configured to the correct bitrate.
+* Configuring the CAN bitrate from the tool is not supported. This is a system-wide setting on Linux.
 * Selecting a specific Ethernet interface via config file is not supported. All interfaces of the host are used.
 * Detection if running on a Laptop is not supported.
 * WinTaskbarProgress is not supported.
