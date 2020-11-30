@@ -16,7 +16,7 @@
 #include "C_OSCSuSequences.h"
 #include "C_SyvComDriverThread.h"
 #include "CCAN.h"
-#include "C_OSCIpDispatcherWinSock.h"
+#include "C_OSCIpDispatcher.h"
 #include "TGLTasks.h"
 
 /* -- Namespace ----------------------------------------------------------------------------------------------------- */
@@ -111,7 +111,7 @@ private:
    C_SyvComDriverThread * mpc_Thread;
    stw_tgl::C_TGLCriticalSection * mpc_Lock;
    stw_can::C_CAN * mpc_CanDllDispatcher;
-   stw_opensyde_core::C_OSCIpDispatcherWinSock * mpc_EthernetDispatcher;
+   stw_opensyde_core::C_OSCIpDispatcher * mpc_EthernetDispatcher;
    bool mq_AbortFlag;
    stw_types::uint32 mu32_ViewIndex;
 

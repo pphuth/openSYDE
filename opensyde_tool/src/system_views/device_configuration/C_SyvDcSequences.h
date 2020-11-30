@@ -23,7 +23,7 @@
 #include "C_SyvComDriverThread.h"
 #include "C_OSCNodeComInterfaceSettings.h"
 #include "CCAN.h"
-#include "C_OSCIpDispatcherWinSock.h"
+#include "C_OSCIpDispatcher.h"
 #include "TGLTasks.h"
 
 /* -- Namespace ----------------------------------------------------------------------------------------------------- */
@@ -210,7 +210,7 @@ private:
    C_SyvComDriverThread * mpc_Thread;
    stw_tgl::C_TGLCriticalSection mc_CriticalSection;
    stw_can::C_CAN * mpc_CanDllDispatcher;
-   stw_opensyde_core::C_OSCIpDispatcherWinSock * mpc_EthernetDispatcher;
+   stw_opensyde_core::C_OSCIpDispatcher * mpc_EthernetDispatcher;
    // Sequence execution parameter
    E_Sequence me_Sequence;
    // Input parameter for sequence

@@ -102,7 +102,9 @@ C_SyvUpSequences::~C_SyvUpSequences(void)
    if (this->mpc_CanDllDispatcher != NULL)
    {
       this->mpc_CanDllDispatcher->CAN_Exit();
+#ifdef WIN32
       this->mpc_CanDllDispatcher->DLL_Close();
+#endif
       delete mpc_CanDllDispatcher;
    }
 

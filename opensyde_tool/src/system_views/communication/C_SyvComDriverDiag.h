@@ -23,7 +23,7 @@
 #include "C_SyvComPollingThreadDiag.h"
 #include "C_SyvComDriverThread.h"
 #include "CCAN.h"
-#include "C_OSCIpDispatcherWinSock.h"
+#include "C_OSCIpDispatcher.h"
 #include "C_OSCCanSignal.h"
 
 /* -- Namespace ----------------------------------------------------------------------------------------------------- */
@@ -159,7 +159,7 @@ private:
 
    const stw_types::uint32 mu32_ViewIndex;
    stw_can::C_CAN * mpc_CanDllDispatcher;
-   stw_opensyde_core::C_OSCIpDispatcherWinSock * mpc_EthernetDispatcher;
+   stw_opensyde_core::C_OSCIpDispatcher * mpc_EthernetDispatcher;
 
    // Mapping from CAN-ID to registered widget and its used CAN message signal
    QMap<stw_types::uint32, QList<C_SyvComDriverDiagWidgetRegistration> > mc_AllWidgets;

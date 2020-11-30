@@ -28,6 +28,10 @@
 #include "C_OSCUtils.h"
 #include "C_OSCLoggingHandler.h"
 #include "C_OSCBinaryHash.h"
+#ifndef WIN32
+#include <unistd.h>
+#endif
+#include "application_version.h"
 
 /* -- Used Namespaces ----------------------------------------------------------------------------------------------- */
 using namespace stw_scl;
@@ -543,12 +547,13 @@ QString C_Uti::h_GetExePath(void)
 //----------------------------------------------------------------------------------------------------------------------
 QString C_Uti::h_GetApplicationVersion(const bool oq_UseSTWFormat)
 {
+   C_SCLString c_Version;
+#ifdef WIN32
    const QFileInfo c_FileInfo(QApplication::applicationFilePath());
    const QString c_FileName = c_FileInfo.fileName();
    VS_FIXEDFILEINFO * pt_Info;
    uintn un_ValSize;
    sint32 s32_InfoSize;
-   C_SCLString c_Version;
 
    c_Version = "V?.\?\?r?";
 
@@ -580,6 +585,20 @@ QString C_Uti::h_GetApplicationVersion(const bool oq_UseSTWFormat)
       }
       delete[] pu8_Buffer;
    }
+#else
+   uint8 u8_Major = APPLICATION_VERSION_MAJOR;
+   uint8 u8_Minor = APPLICATION_VERSION_MINOR;
+   uint8 u8_Revision = APPLICATION_VERSION_REVISION;
+
+   if (oq_UseSTWFormat)
+   {
+      c_Version.PrintFormatted("V%d.%02dr%d", u8_Major, u8_Minor, u8_Revision);
+   }
+   else
+   {
+      c_Version.PrintFormatted("%d.%02d.%d", u8_Major, u8_Minor, u8_Revision);
+   }
+#endif
    return c_Version.c_str();
 }
 
@@ -1232,7 +1251,11 @@ QString C_Uti::h_ResolveProjIndependentPlaceholderVariables(const QString & orc_
       QString c_UserName;
       charn acn_WinUserName[255];
       uint32 u32_Size = sizeof(acn_WinUserName);
+#ifdef WIN32
       const bool q_Return = (GetComputerNameA(acn_WinUserName, &u32_Size) == 0) ? false : true;
+#else
+      const bool q_Return = (gethostname(acn_WinUserName, u32_Size) == 0) ? true : false;
+#endif
       if (q_Return == true)
       {
          c_UserName = acn_WinUserName;
