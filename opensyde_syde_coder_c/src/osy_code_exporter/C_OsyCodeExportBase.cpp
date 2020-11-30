@@ -27,6 +27,11 @@
 #include "C_OsyCodeExportBase.h"
 #include "C_OSCUtils.h"
 #include "C_OSCBinaryHash.h"
+#ifndef WIN32
+#include <unistd.h>
+#include <limits.h>
+#include "application_version.h"
+#endif
 
 /* -- Used Namespaces ----------------------------------------------------------------------------------------------- */
 
@@ -94,11 +99,12 @@ void C_OsyCodeExportBase::m_PrintCommandLineParameters(void) const
 //----------------------------------------------------------------------------------------------------------------------
 C_SCLString C_OsyCodeExportBase::h_GetApplicationVersion(const C_SCLString & orc_FileName)
 {
+   C_SCLString c_Version;
+#ifdef WIN32
    VS_FIXEDFILEINFO * pt_Info;
    uintn un_ValSize;
    sint32 s32_InfoSize;
    uint8 * pu8_Buffer;
-   C_SCLString c_Version;
 
    c_Version = "V?.\?\?r?";
 
@@ -120,6 +126,15 @@ C_SCLString C_OsyCodeExportBase::h_GetApplicationVersion(const C_SCLString & orc
       }
       delete[] pu8_Buffer;
    }
+#else
+   uint8 u8_Major = APPLICATION_VERSION_MAJOR;
+   uint8 u8_Minor = APPLICATION_VERSION_MINOR;
+   uint8 u8_Revision = APPLICATION_VERSION_REVISION;
+
+   (void)orc_FileName;
+
+   c_Version.PrintFormatted("V%d.%02dr%d", u8_Major, u8_Minor, u8_Revision);
+#endif
    return c_Version;
 }
 
@@ -143,8 +158,17 @@ C_OsyCodeExportBase::~C_OsyCodeExportBase(void)
 C_OsyCodeExportBase::E_ResultCode C_OsyCodeExportBase::Init(void)
 {
    E_ResultCode e_Return = eRESULT_OK;
+#ifdef WIN32
    charn acn_ApplicationName[MAX_PATH + 1];
    sintn sn_Return = GetModuleFileNameA(NULL, &acn_ApplicationName[0], MAX_PATH + 1);
+#else
+   sintn sn_Return;
+   charn acn_ProcLink[64];
+   charn acn_ApplicationName[PATH_MAX + 1];
+
+   sprintf(acn_ProcLink, "/proc/%d/exe", getpid());
+   sn_Return = (readlink(acn_ProcLink, acn_ApplicationName, sizeof(acn_ApplicationName)) > 0) ? 1 : 0;
+#endif
 
    tgl_assert(sn_Return != 0);
 

@@ -1,22 +1,21 @@
 //----------------------------------------------------------------------------------------------------------------------
 /*!
    \file
-   \brief       Utility class for C_OSCComDriver (header)
+   \brief       Help engine handler (header)
 
    See cpp file for detailed description
 
-   \copyright   Copyright 2017 Sensor-Technik Wiedemann GmbH. All rights reserved.
+   \copyright   Copyright 2016 Sensor-Technik Wiedemann GmbH. All rights reserved.
 */
 //----------------------------------------------------------------------------------------------------------------------
-#ifndef C_SYVCOMDRIVERUTIL_H
-#define C_SYVCOMDRIVERUTIL_H
+#ifndef C_HEHANDLER_H
+#define C_HEHANDLER_H
 
 /* -- Includes ------------------------------------------------------------------------------------------------------ */
-#include <vector>
-#include "C_OSCSystemDefinition.h"
-#include "C_PuiSvHandler.h"
-#include "CCAN.h"
-#include "C_OSCIpDispatcher.h"
+#include <QWidget>
+#include <QString>
+#include <QMap>
+#include "stwtypes.h"
 
 /* -- Namespace ----------------------------------------------------------------------------------------------------- */
 namespace stw_opensyde_gui_logic
@@ -24,15 +23,18 @@ namespace stw_opensyde_gui_logic
 /* -- Global Constants ---------------------------------------------------------------------------------------------- */
 
 /* -- Types --------------------------------------------------------------------------------------------------------- */
-
-class C_SyvComDriverUtil
+class C_HeHandler
 {
 public:
-   static stw_types::sint32 h_GetOSCComDriverParamFromView(const stw_types::uint32 ou32_ViewIndex,
-                                                           stw_types::uint32 & oru32_ActiveBusIndex,
-                                                           std::vector<stw_types::uint8> & orc_ActiveNodes,
-                                                           stw_can::C_CAN ** const oppc_CanDispatcher,
-                                                           stw_opensyde_core::C_OSCIpDispatcher ** const oppc_IpDispatcher, const bool oq_InitCan = true);
+   static C_HeHandler & GetInstance(void);
+   void CallSpecificHelpPage(const QString & orc_ClassName);
+   static bool CheckHelpKey(const QKeyEvent * const opc_KeyEvent);
+   void SetHelpFileRelPath(const QString & orc_RelPath);
+
+private:
+   C_HeHandler();
+   static C_HeHandler mhc_Instance;
+   virtual ~C_HeHandler();
 };
 
 /* -- Extern Global Variables --------------------------------------------------------------------------------------- */

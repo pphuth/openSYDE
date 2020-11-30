@@ -8,12 +8,13 @@ QT       += core gui
 CONFIG   += precompile_header
 CONFIG   += no_keywords
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets charts svg winextras
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets charts svg
+win32:greaterThan(QT_MAJOR_VERSION, 4): QT += winextras
 
 TARGET = openSYDE
 TEMPLATE = app
 
-DESTDIR = ../result/tool
+DESTDIR = $$_PRO_FILE_PWD_/../result/tool
 
 #version info:
 RC_FILE = ../src/resources.rc
@@ -26,7 +27,13 @@ opensyde_core_skip_modules += opensyde_core_skip_code_generation
 opensyde_core_skip_modules += opensyde_core_skip_protocol_logging
 include(../libs/opensyde_core/opensyde_core.pri)
 
-SOURCES += ../src/main.cpp \
+SOURCES += ../src/main.cpp\
+    ../libs/opensyde_core/xml_parser/C_OSCXMLParser.cpp \
+    ../libs/opensyde_core/scl/CSCLChecksums.cpp \
+    ../libs/opensyde_core/scl/CSCLDateTime.cpp \
+    ../libs/opensyde_core/scl/CSCLIniFile.cpp \
+    ../libs/opensyde_core/scl/CSCLString.cpp \
+    ../libs/opensyde_core/scl/CSCLStringList.cpp \
     ../libs/opensyde_core/C_OSCZipData.cpp \
     ../libs/opensyde_core/C_OSCZipFile.cpp \
     ../src/system_definition/C_SdTopologyWidget.cpp \
@@ -98,7 +105,6 @@ SOURCES += ../src/main.cpp \
     ../src/graphic_items/C_GiRect.cpp \
     ../src/opensyde_gui_elements/label/C_OgeLabPopUpSubTitle.cpp \
     ../src/graphic_items/style_setup/C_GiSyBoundaryWidget.cpp \
-    ../src/help_engine/C_HeHandler.cpp \
     ../src/graphic_items/C_GiText.cpp \
     ../src/graphic_items/style_setup/C_GiSyTextElementWidget.cpp \
     ../src/opensyde_gui_elements/push_button/C_OgePubIconText.cpp \
@@ -380,6 +386,8 @@ SOURCES += ../src/main.cpp \
     ../src/system_views/dashboards/C_SyvDaTearOffWidget.cpp \
     ../src/scene_base/C_SebTopologyBaseContextMenuManager.cpp \
     ../src/system_views/system_setup/C_SyvSeDllConfigurationDialog.cpp \
+    ../libs/opensyde_core/can_dispatcher/dispatcher/CCANBase.cpp \
+    ../libs/opensyde_core/can_dispatcher/dispatcher/CCANDispatcher.cpp \
     ../src/opensyde_gui_elements/group_box/C_OgeGbxRead.cpp \
     ../src/opensyde_gui_elements/label/C_OgeLabReadMain.cpp \
     ../src/opensyde_gui_elements/label/C_OgeLabReadSub.cpp \
@@ -846,9 +854,45 @@ win32-msvc* {
    SOURCES += ../result/miniz/miniz.c
 }
 
+win32:SOURCES  += \
+    ../libs/opensyde_core/kefex_diaglib/tgl_windows/TGLFile.cpp \
+    ../libs/opensyde_core/kefex_diaglib/tgl_windows/TGLTasks.cpp \
+    ../libs/opensyde_core/kefex_diaglib/tgl_windows/TGLTime.cpp \
+    ../libs/opensyde_core/kefex_diaglib/tgl_windows/TGLUtils.cpp \
+    ../libs/opensyde_core/can_dispatcher/target_windows_stw_dlls/CCAN.cpp \
+    ../libs/opensyde_core/can_dispatcher/target_windows_stw_dlls/CCANDLL.cpp \
+    ../libs/opensyde_core/ip_dispatcher/target_windows_win_sock/C_OSCIpDispatcherWinSock.cpp \
+    ../src/help_engine/windows/C_HeHandler.cpp \
+    ../src/system_views/system_setup/C_SyvSeDllConfigurationDialog.cpp
+
+unix:SOURCES  += \
+    ../libs/opensyde_core/kefex_diaglib/tgl_linux/TGLFile.cpp \
+    ../libs/opensyde_core/kefex_diaglib/tgl_linux/TGLTasks.cpp \
+    ../libs/opensyde_core/kefex_diaglib/tgl_linux/TGLTime.cpp \
+    ../libs/opensyde_core/kefex_diaglib/tgl_linux/TGLUtils.cpp \
+    ../libs/opensyde_core/can_dispatcher/target_linux_socket_can/CCAN.cpp \
+    ../libs/opensyde_core/ip_dispatcher/target_linux_sock/C_OSCIpDispatcherLinuxSock.cpp \
+    ../libs/opensyde_core/miniz/miniz.c \
+    ../src/help_engine/linux/C_HeHandler.cpp \
+    ../src/system_views/system_setup/C_SyvSeCanConfigurationDialog.cpp
+
+
 PRECOMPILED_HEADER = ../src/precompiled_headers/gui/precomp_headers.h
 
 HEADERS  += \
+    ../libs/opensyde_core/stwtypes/stwtypes.h \
+    ../libs/opensyde_core/xml_parser/C_OSCXMLParser.h \
+    ../libs/opensyde_core/scl/CSCLChecksums.h \
+    ../libs/opensyde_core/scl/CSCLDateTime.h \
+    ../libs/opensyde_core/scl/CSCLIniFile.h \
+    ../libs/opensyde_core/scl/CSCLString.h \
+    ../libs/opensyde_core/scl/CSCLStringList.h \
+    ../libs/opensyde_core/scl/SCLDynamicArray.h \
+    ../libs/opensyde_core/stwerrors.h \
+    ../libs/opensyde_core/project/system/node/C_OSCNode.h \
+    ../libs/opensyde_core/project/system/node/C_OSCNodeFiler.h \
+    ../libs/opensyde_core/project/system/C_OSCSystemDefinition.h \
+    ../libs/opensyde_core/project/system/C_OSCSystemDefinitionFiler.h \
     ../libs/opensyde_core/C_OSCZipData.h \
     ../libs/opensyde_core/C_OSCZipFile.h \
     ../libs/opensyde_core/miniz/miniz.h \
@@ -923,7 +967,6 @@ HEADERS  += \
     ../src/graphic_items/C_GiRect.h \
     ../src/opensyde_gui_elements/label/C_OgeLabPopUpSubTitle.h \
     ../src/graphic_items/style_setup/C_GiSyBoundaryWidget.h \
-    ../src/help_engine/C_HeHandler.h \
     ../src/graphic_items/C_GiText.h \
     ../src/graphic_items/style_setup/C_GiSyTextElementWidget.h \
     ../src/opensyde_gui_elements/push_button/C_OgePubIconText.h \
@@ -1205,6 +1248,9 @@ HEADERS  += \
     ../src/system_views/dashboards/C_SyvDaTearOffWidget.h \
     ../src/scene_base/C_SebTopologyBaseContextMenuManager.h \
     ../src/system_views/system_setup/C_SyvSeDllConfigurationDialog.h \
+    ../libs/opensyde_core/can_dispatcher/dispatcher/CCANBase.h \
+    ../libs/opensyde_core/can_dispatcher/dispatcher/CCANDispatcher.h \
+    ../libs/opensyde_core/can_dispatcher/dispatcher/stw_can.h \
     ../src/opensyde_gui_elements/group_box/C_OgeGbxRead.h \
     ../src/opensyde_gui_elements/label/C_OgeLabReadMain.h \
     ../src/opensyde_gui_elements/label/C_OgeLabReadSub.h \
@@ -1379,6 +1425,7 @@ HEADERS  += \
     ../src/opensyde_gui_elements/spin_box/C_OgeSpxInt64FactorTable.h \
     ../src/system_views/system_setup/C_SyvSeContextMenuManager.h \
     ../src/opensyde_gui_elements/check_box/C_OgeChxDefaultCheckedDisabled.h \
+    ../libs/opensyde_core/ip_dispatcher/dispatcher/C_OSCIpDispatcher.h \
     ../src/user_settings/C_UsNode.h \
     ../src/user_settings/C_UsNodeDatapool.h \
     ../src/system_views/C_SyvUtil.h \
@@ -1658,6 +1705,27 @@ HEADERS  += \
     ../src/opensyde_gui_elements/label/C_OgeLabElided.h \
     ../src/opensyde_gui_elements/spin_box/C_OgeSpxDoubleAutoFixCustomTrigger.h
 
+win32:HEADERS += \
+    ../libs/opensyde_core/kefex_diaglib/tgl_windows/TGLFile.h \
+    ../libs/opensyde_core/kefex_diaglib/tgl_windows/TGLTasks.h \
+    ../libs/opensyde_core/kefex_diaglib/tgl_windows/TGLTime.h \
+    ../libs/opensyde_core/kefex_diaglib/tgl_windows/TGLUtils.h \
+    ../libs/opensyde_core/can_dispatcher/target_windows_stw_dlls/CCAN.h \
+    ../libs/opensyde_core/can_dispatcher/target_windows_stw_dlls/CCANDLL.h \
+    ../libs/opensyde_core/ip_dispatcher/target_windows_win_sock/C_OSCIpDispatcherWinSock.h \
+    ../src/help_engine/windows/C_HeHandler.h \
+    ../src/system_views/system_setup/C_SyvSeDllConfigurationDialog.h
+
+unix:HEADERS += \
+    ../libs/opensyde_core/kefex_diaglib/tgl_linux/TGLFile.h \
+    ../libs/opensyde_core/kefex_diaglib/tgl_linux/TGLTasks.h \
+    ../libs/opensyde_core/kefex_diaglib/tgl_linux/TGLTime.h \
+    ../libs/opensyde_core/kefex_diaglib/tgl_linux/TGLUtils.h \
+    ../libs/opensyde_core/can_dispatcher/target_linux_socket_can/CCAN.h \
+    ../libs/opensyde_core/ip_dispatcher/target_linux_sock/C_OSCIpDispatcherLinuxSock.h \
+    ../src/help_engine/linux/C_HeHandler.h \
+    ../src/system_views/system_setup/C_SyvSeCanConfigurationDialog.h
+
 FORMS    += \
     ../src/system_definition/C_SdTopologyWidget.ui \
     ../src/system_definition/node_edit/datapools/C_SdNdeDpEditWidget.ui \
@@ -1714,7 +1782,6 @@ FORMS    += \
     ../src/system_views/system_update/C_SyvUpOverviewWidget.ui \
     ../src/opensyde_gui_elements/widget/C_OgeWiDashboardTab.ui \
     ../src/system_views/dashboards/C_SyvDaTearOffWidget.ui \
-    ../src/system_views/system_setup/C_SyvSeDllConfigurationDialog.ui \
     ../src/opensyde_gui_elements/widget/C_OgeWiFontConfig.ui \
     ../src/system_views/dashboards/C_SyvDaDashboardSettings.ui \
     ../src/system_views/dashboards/items/C_SyvDaItDashboardLabelWidget.ui \
@@ -1800,6 +1867,12 @@ FORMS    += \
     ../src/system_definition/node_edit/halc/C_SdNdeHalcChannelDpPreviewPopUp.ui \
     ../src/system_definition/node_edit/datapools/C_SdNdeDpListCommentDialog.ui
 
+win32:FORMS += \
+    ../src/system_views/system_setup/C_SyvSeDllConfigurationDialog.ui
+
+unix:FORMS += \
+    ../src/system_views/system_setup/C_SyvSeCanConfigurationDialog.ui
+
 INCLUDEPATH += ../src \
                ../src/com_import_export \
                ../src/implementation \
@@ -1875,27 +1948,70 @@ INCLUDEPATH += ../src \
                ../src/project_gui/system_definition \
                ../src/project_gui/system_definition/node \
                ../src/project_gui/system_definition/node/can \
-               ../src/help_engine \
                ../src/gettext \
                ../src/util \
                ../src/precompiled_headers/gui \
+               ../libs/opensyde_core \
+               ../libs/opensyde_core/can_dispatcher \
+               ../libs/opensyde_core/can_dispatcher/dispatcher \
+               ../libs/opensyde_core/ip_dispatcher/dispatcher \
+               ../libs/opensyde_core/data_dealer \
+               ../libs/opensyde_core/data_dealer/paramset \
+               ../libs/opensyde_core/exports \
+               ../libs/opensyde_core/halc \
+               ../libs/opensyde_core/halc/configuration \
+               ../libs/opensyde_core/halc/definition \
+               ../libs/opensyde_core/halc/definition/base \
+               ../libs/opensyde_core/halc/magician \
+               ../libs/opensyde_core/imports \
+               ../libs/opensyde_core/logging \
+               ../libs/opensyde_core/md5 \
+               ../libs/opensyde_core/project \
+               ../libs/opensyde_core/project/system \
+               ../libs/opensyde_core/project/system/node \
+               ../libs/opensyde_core/project/system/node/can \
+               ../libs/opensyde_core/project/system/FileLoadersV2 \
+               ../libs/opensyde_core/protocol_drivers \
+               ../libs/opensyde_core/protocol_drivers/routing \
+               ../libs/opensyde_core/protocol_drivers/communication \
+               ../libs/opensyde_core/protocol_drivers/system_update \
+               ../libs/opensyde_core/scl \
+               ../libs/opensyde_core/stwtypes\
+               ../libs/opensyde_core/kefex_diaglib \
+               ../libs/opensyde_core/xml_parser \
+               ../libs/opensyde_core/xml_parser/tinyxml2 \
                ../libs/opensyde_core/miniz \
-               ../libs/gettext \
                ../libs/dbc_driver_library/src/ \
                ../libs/dbc_driver_library/src/Vector \
                ../libs/dbc_driver_library/src/Vector/DBC
 
+win32:INCLUDEPATH += \
+               ../libs/opensyde_core/can_dispatcher/target_windows_stw_dlls \
+               ../libs/opensyde_core/ip_dispatcher/target_windows_win_sock \
+               ../libs/opensyde_core/kefex_diaglib/tgl_windows \
+               ../src/help_engine/windows \
+               ../libs/gettext
+
+unix:INCLUDEPATH += \
+               ../libs/opensyde_core/can_dispatcher/target_linux_socket_can \
+               ../libs/opensyde_core/ip_dispatcher/target_linux_sock \
+               ../libs/opensyde_core/kefex_diaglib/tgl_linux \
+               ../src/help_engine/linux
+
+
 RESOURCES += \
     ../src/application.qrc
 
-LIBS += -L../libs/gettext -lintl \
-        -lz
+win32:LIBS += -L../libs/gettext \
+              -lintl \
+              -lz \
+              -lws2_32 \
+              -lIphlpapi \
+              -lversion
 
-LIBS += -lws2_32   #WinSock
-LIBS += -lIphlpapi #IP helper API
+unix:LIBS += -lz
 
-#add windows API libraries
-LIBS += -lversion
+unix:QMAKE_CXXFLAGS += -std=c++0x
 
 QMAKE_TARGET_COMPANY = STW
 QMAKE_TARGET_PRODUCT = openSYDE
